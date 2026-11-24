@@ -1,0 +1,43 @@
+# GardeTicket — vhost nginx autonome (généré par deploy/install.sh --standalone)
+
+# Accès réservé aux mobiles/tablettes (selon le User-Agent).
+# Valeur par défaut ci-dessous : 1 = ordinateurs bloqués, 0 = tout le monde autorisé.
+map $http_user_agent $gardeticket_block {
+    default @BLOCK_DEFAULT@;
+    "~*(Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile)" 0;
+    "~*Uptime-Kuma" 0;
+}
+
+server {
+    @LISTEN@
+    server_name @DOMAIN@;
+
+    root @WEBROOT@;
+    index index.html;
+
+    server_tokens off;
+
+    access_log /var/log/nginx/gardeticket.access.log;
+    error_log  /var/log/nginx/gardeticket.error.log;
+
+    gzip on;
+    gzip_vary on;
+    gzip_types text/css text/javascript application/javascript application/json image/svg+xml;
+
+    add_header Cache-Control "no-cache" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(self), microphone=(), geolocation=(), payment=()" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; frame-src 'self' data: blob:; object-src 'self' data: blob:; manifest-src 'self'; worker-src 'self';" always;
+
+    location / {
+        if ($gardeticket_block) {
+            default_type text/html;
+            return 403 '<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GardeTicket</title><body style="font-family:system-ui;max-width:32rem;margin:3rem auto;padding:0 1rem"><h1>GardeTicket</h1><p>Cette application est conçue pour smartphones et tablettes. Ouvre cette adresse depuis ton téléphone.</p></body></html>';
+        }
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ /\. { deny all; }
+}

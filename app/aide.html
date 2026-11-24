@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1C7176">
+  <title>Mode d'emploi — GardeTicket</title>
+  <script src="theme-init.js"></script>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>📖 Mode d'emploi</h1>
+    <p>Tout savoir pour bien utiliser GardeTicket au quotidien.</p>
+    <a href="index.html" class="btn-help">← Retour à mes tickets</a>
+  </header>
+
+  <main>
+    <section class="card guide-card">
+      <h2>1. Installer l'application sur ton téléphone</h2>
+      <p>GardeTicket est conçue <strong>exclusivement pour les smartphones et tablettes</strong> (l'accès depuis un ordinateur de bureau est bloqué). Elle fonctionne directement dans ton navigateur mobile, et tu peux l'installer comme une vraie application sur ton écran d'accueil :</p>
+      <ul class="guide-list">
+        <li><strong>Sur Android (Chrome, Vivaldi, Brave...) :</strong> ouvre le menu en haut ou en bas (les trois points) et appuie sur <em>« Ajouter à l'écran d'accueil »</em> ou <em>« Installer l'application »</em>.</li>
+        <li><strong>Sur iPhone (Safari) :</strong> appuie sur le bouton <em>Partager</em> (le carré avec une flèche vers le haut) puis sur <em>« Sur l'écran d'accueil »</em>.</li>
+        <li><strong>Thèmes de couleurs :</strong> depuis l'écran principal, appuie sur <em>🎨 Thème</em> pour choisir la couleur dominante de l'application parmi 8 teintes tout en conservant le mode clair ou sombre automatique de ton téléphone.</li>
+        <li><strong>Mises à jour automatiques :</strong> dès qu'une nouveauté est publiée et que tu as du réseau, l'application met à jour son cache toute seule sans toucher à tes tickets enregistrés.</li>
+      </ul>
+      <p class="guide-tip">💡 Une fois installée, l'application s'ouvre en plein écran et fonctionne même sans connexion internet dans les magasins.</p>
+    </section>
+
+    <section class="card guide-card">
+      <h2>2. Ajouter un ticket ou une facture</h2>
+      <p>Appuie sur le bouton <strong>+ Ajouter un ticket</strong> :</p>
+      <ul class="guide-list">
+        <li><strong>📷 Prendre une photo :</strong> ouvre directement l'appareil photo pour scanner ton ticket papier. Pose-le bien à plat sur un fond sombre ou contrasté.</li>
+        <li><strong>📁 Galerie / PDF :</strong> permet de choisir une photo déjà prise ou d'importer une facture PDF reçue par mail.</li>
+        <li><strong>Recadrage auto &amp; ✂️ Ajuster :</strong> l'application découpe automatiquement autour du ticket. Si un bord dépasse encore, appuie sur <em>Ajuster</em> pour régler les 4 côtés avec les curseurs.</li>
+        <li><strong>🖨️ Scanner N&amp;B :</strong> très pratique pour les vieux tickets effacés ou très pâles, cette option renforce le contraste en noir et blanc.</li>
+        <li><strong>Note / N° de série :</strong> note ici le numéro de série de l'appareil (souvent écrit au dos). Tu pourras le retrouver facilement grâce à la barre de recherche.</li>
+      </ul>
+    </section>
+
+    <section class="card guide-card">
+      <h2>3. Comprendre les couleurs et rappels de garantie</h2>
+      <ul class="guide-list">
+        <li><span class="badge ok">Fin : JJ/MM/AAAA</span> <strong>Bordure verte :</strong> ton appareil est encore couvert par la garantie.</li>
+        <li><span class="badge warn">XX j restants</span> <strong>Bordure orange :</strong> la garantie arrive à échéance dans moins de 3 mois. Un bandeau d'alerte s'affiche automatiquement en haut de ta liste pour les repérer en un coup d'œil.</li>
+        <li><span class="badge expired">Expirée</span> <strong>Bordure grise :</strong> la garantie est terminée, mais le ticket reste conservé comme preuve d'achat.</li>
+      </ul>
+    </section>
+
+    <section class="card guide-card">
+      <h2>4. Consulter, programmer un rappel et envoyer au SAV</h2>
+      <p>Appuie sur n'importe quel ticket de ta liste pour ouvrir sa fiche :</p>
+      <ul class="guide-list">
+        <li><strong>Zoom plein écran :</strong> touche la photo du ticket pour l'ouvrir en grand et zoomer avec deux doigts sur les petits caractères ou le code-barres.</li>
+        <li><strong>🔔 Rappel agenda (en 3 étapes, 100 % local) :</strong>
+          <ol>
+            <li>Appuie sur <em>🔔 Rappel agenda</em> : ton téléphone télécharge un petit fichier calendrier (<code>.ics</code>) programmé <strong>30 jours avant la fin de garantie</strong>.</li>
+            <li>Ouvre ce fichier depuis la barre de téléchargement de ton navigateur (ou ton dossier <em>Téléchargements</em>).</li>
+            <li>Choisis ton application d'agenda (Google Agenda, Calendrier Apple, Nextcloud…) et valide l'enregistrement de l'événement.</li>
+          </ol>
+        </li>
+        <li><strong>📤 Partager :</strong> envoie directement la photo ou la facture PDF par mail, WhatsApp ou messagerie si tu dois contacter un service après-vente.</li>
+      </ul>
+    </section>
+
+    <section class="card guide-card">
+      <h2>5. 🔒 Vie privée et sauvegardes (Important)</h2>
+      <p>Pour respecter ta vie privée, <strong>aucune donnée n'est envoyée sur internet</strong>. Tout est enregistré uniquement dans la mémoire de ton téléphone.</p>
+      <ul class="guide-list">
+        <li><strong>⚠️ Attention :</strong> si tu vides le cache et les données de ton navigateur, si tu désinstalles le navigateur ou si tu changes de téléphone, tes tickets seront effacés.</li>
+        <li><strong>💾 Sauvegarder :</strong> appuie régulièrement sur ce bouton pour télécharger un fichier de secours (<code>gardeticket-sauvegarde-....json</code>) dans tes téléchargements ou ton cloud personnel.</li>
+        <li><strong>📂 Restaurer :</strong> permet de récupérer tes tickets depuis ton fichier de sauvegarde, sans créer de doublons.</li>
+      </ul>
+    </section>
+
+    <a href="index.html" class="btn-primary">← Retour à mes tickets</a>
+  </main>
+
+  <footer>
+    <p class="author">Proposé par <strong>Amaury aka BlablaLinux</strong> • <a href="https://blablalinux.be/mes-services-publics/" target="_blank" rel="noopener">Mes services publics</a> • v2.4</p>
+  </footer>
+</body>
+</html>

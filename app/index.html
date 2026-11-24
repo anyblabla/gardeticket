@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#1C7176">
+  <title>GardeTicket — Mes tickets et garanties</title>
+  <script src="theme-init.js"></script>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🧾 GardeTicket</h1>
+    <p>Tes tickets et garanties, stockés uniquement sur ton téléphone.</p>
+    <div class="header-links">
+      <a href="aide.html" class="btn-help">📖 Mode d'emploi</a>
+      <button type="button" id="btn-theme" class="btn-help" aria-expanded="false">🎨 Thème</button>
+      <button type="button" id="btn-changelog" class="btn-help">✨ Nouveautés <span id="badge-new-version" class="badge-dot hidden" aria-label="Nouveau"></span></button>
+      <button type="button" id="btn-roadmap" class="btn-help">🚀 À venir</button>
+    </div>
+    <div id="theme-picker" class="theme-picker hidden" role="group" aria-label="Choisir une couleur principale">
+      <button type="button" class="theme-swatch" data-theme="teal" style="--swatch: #1C7176;" title="Sarcelle (défaut)" aria-label="Thème Sarcelle"></button>
+      <button type="button" class="theme-swatch" data-theme="ocean" style="--swatch: #1D4ED8;" title="Bleu océan" aria-label="Thème Bleu océan"></button>
+      <button type="button" class="theme-swatch" data-theme="indigo" style="--swatch: #4338CA;" title="Indigo" aria-label="Thème Indigo"></button>
+      <button type="button" class="theme-swatch" data-theme="forest" style="--swatch: #15803D;" title="Vert forêt" aria-label="Thème Vert forêt"></button>
+      <button type="button" class="theme-swatch" data-theme="plum" style="--swatch: #7E22CE;" title="Prune" aria-label="Thème Prune"></button>
+      <button type="button" class="theme-swatch" data-theme="magenta" style="--swatch: #A21CAF;" title="Magenta" aria-label="Thème Magenta"></button>
+      <button type="button" class="theme-swatch" data-theme="crimson" style="--swatch: #BE123C;" title="Bordeaux" aria-label="Thème Bordeaux"></button>
+      <button type="button" class="theme-swatch" data-theme="slate" style="--swatch: #334155;" title="Ardoise" aria-label="Thème Ardoise"></button>
+    </div>
+  </header>
+
+  <div id="update-banner" class="update-banner hidden" role="status">
+    <span>✨ Nouvelle version disponible !</span>
+    <button type="button" id="btn-reload-app" class="btn-update">Actualiser</button>
+  </div>
+
+  <main>
+    <!-- Actions principales -->
+    <section class="actions-bar">
+      <button id="btn-toggle-form" class="btn-primary">+ Ajouter un ticket</button>
+      <div class="backup-actions">
+        <button id="btn-export" class="btn-secondary" title="Sauvegarder dans un fichier">💾 Sauvegarder</button>
+        <label class="btn-secondary" title="Restaurer depuis un fichier">
+          📂 Restaurer
+          <input type="file" id="input-import" accept=".json" hidden>
+        </label>
+      </div>
+    </section>
+
+    <!-- Formulaire d'ajout / modification -->
+    <form id="ticket-form" class="card hidden">
+      <h2 id="form-title">Nouveau ticket</h2>
+
+      <div class="field-group">
+        <span class="field-label">Justificatif (photo ou PDF) <span id="file-req">*</span></span>
+        <div class="upload-choices">
+          <label class="btn-upload">
+            📷 Prendre une photo
+            <input type="file" id="photo-camera" accept="image/*" capture="environment" hidden>
+          </label>
+          <label class="btn-upload">
+            📁 Galerie / PDF
+            <input type="file" id="photo-file" accept="image/*,application/pdf" hidden>
+          </label>
+        </div>
+      </div>
+
+      <div id="crop-option" class="crop-toolbar hidden">
+        <div class="crop-checks">
+          <label class="checkbox-row">
+            <input type="checkbox" id="auto-crop" checked>
+            Recadrage auto
+          </label>
+          <label class="checkbox-row">
+            <input type="checkbox" id="bw-filter">
+            🖨️ Scanner N&amp;B
+          </label>
+        </div>
+        <div class="crop-btns">
+          <button type="button" id="btn-manual-crop" class="btn-small">✂️ Ajuster</button>
+          <button type="button" id="btn-rotate" class="btn-small">🔄 Pivoter</button>
+        </div>
+      </div>
+
+      <!-- Réglage manuel des 4 bords -->
+      <div id="manual-crop-box" class="manual-crop hidden">
+        <div class="row">
+          <label>Haut <input type="range" id="crop-top" min="0" max="45" value="0"></label>
+          <label>Bas <input type="range" id="crop-bottom" min="0" max="45" value="0"></label>
+        </div>
+        <div class="row">
+          <label>Gauche <input type="range" id="crop-left" min="0" max="45" value="0"></label>
+          <label>Droite <input type="range" id="crop-right" min="0" max="45" value="0"></label>
+        </div>
+      </div>
+
+      <img id="photo-preview" class="preview hidden" alt="Aperçu du ticket">
+      <p id="pdf-preview" class="pdf-badge hidden">📄 Facture PDF prête à être enregistrée</p>
+
+      <label>
+        Nom de l'objet *
+        <input type="text" id="name" placeholder="Ex : Machine à laver, Grille-pain..." required>
+      </label>
+
+      <label>
+        Magasin
+        <input type="text" id="store" placeholder="Ex : Vanden Borre, Krëfel, Aldi...">
+      </label>
+
+      <div class="row">
+        <label>
+          Date d'achat *
+          <input type="date" id="purchase-date" required>
+        </label>
+
+        <label>
+          Garantie
+          <select id="warranty-years">
+            <option value="1">1 an</option>
+            <option value="2" selected>2 ans (légale)</option>
+            <option value="3">3 ans</option>
+            <option value="5">5 ans</option>
+            <option value="99">À vie</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="row">
+        <label>
+          Prix (optionnel)
+          <input type="number" id="price" step="0.01" placeholder="Ex : 299.99">
+        </label>
+
+        <label>
+          Note / N° de série
+          <input type="text" id="notes" placeholder="Ex : S/N 84920A">
+        </label>
+      </div>
+
+      <div class="form-buttons">
+        <button type="submit" class="btn-primary">Enregistrer</button>
+        <button type="button" id="btn-cancel" class="btn-secondary">Annuler</button>
+      </div>
+    </form>
+
+    <!-- Recherche et filtres -->
+    <input type="search" id="search" placeholder="🔍 Rechercher un objet, magasin ou n° de série...">
+
+    <div class="filters" role="group" aria-label="Filtrer les tickets">
+      <button type="button" class="filter-btn active" data-filter="all">Tous</button>
+      <button type="button" class="filter-btn" data-filter="ok">En cours</button>
+      <button type="button" class="filter-btn" data-filter="warn">Bientôt expirés</button>
+      <button type="button" class="filter-btn" data-filter="expired">Expirés</button>
+    </div>
+
+    <!-- Bandeau d'alerte garanties bientôt expirées -->
+    <button type="button" id="expiry-alert-banner" class="expiry-alert hidden" role="status"></button>
+
+    <!-- Liste des tickets -->
+    <div id="tickets-list" class="tickets-grid"></div>
+  </main>
+
+  <footer>
+    <p>🔒 <strong>100 % privé :</strong> tes tickets ne quittent jamais ton téléphone et ne sont envoyés sur aucun serveur.</p>
+    <p>💡 Pense à cliquer sur <strong>Sauvegarder</strong> de temps en temps : vider les données de ton navigateur efface tes tickets.</p>
+    <p class="author">Proposé par <strong>Amaury aka BlablaLinux</strong> • <a href="https://blablalinux.be/mes-services-publics/" target="_blank" rel="noopener">Mes services publics</a> • <button type="button" id="btn-version-footer" class="btn-link-version">v2.4</button></p>
+  </footer>
+
+  <!-- Modale pour afficher le ticket ou PDF en grand -->
+  <dialog id="modal-ticket">
+    <div class="modal-content">
+      <h3 id="modal-title"></h3>
+      <p id="modal-details"></p>
+      <p id="modal-notes" class="modal-notes hidden"></p>
+      <div id="modal-img-wrap" class="img-zoom-wrap hidden">
+        <img id="modal-img" alt="Ticket en plein écran">
+        <span class="zoom-hint">🔍 Touche l'image pour zoomer en plein écran</span>
+      </div>
+      <div id="modal-pdf-box" class="hidden">
+        <iframe id="modal-pdf" title="Aperçu PDF"></iframe>
+        <a id="btn-open-pdf" class="btn-primary pdf-link" target="_blank" rel="noopener">📄 Ouvrir / Télécharger le PDF</a>
+      </div>
+      <div class="modal-buttons">
+        <button id="btn-share" class="btn-primary btn-share">📤 Partager</button>
+        <button id="btn-reminder" class="btn-secondary">🔔 Rappel agenda</button>
+        <button id="btn-edit" class="btn-secondary">✏️ Modifier</button>
+        <button id="btn-delete" class="btn-danger">Supprimer</button>
+        <button id="btn-close-modal" class="btn-secondary">Fermer</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Modale choix de restauration -->
+  <dialog id="modal-import">
+    <div class="modal-content">
+      <h3>Restaurer une sauvegarde</h3>
+      <p id="import-summary"></p>
+      <div class="import-choices">
+        <button type="button" id="btn-import-replace" class="btn-primary">🔄 Tout remplacer (sans doublons)</button>
+        <button type="button" id="btn-import-merge" class="btn-secondary">➕ Ajouter uniquement les nouveaux</button>
+        <button type="button" id="btn-import-cancel" class="btn-secondary">Annuler</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Visionneuse plein écran zoomable -->
+  <dialog id="fullscreen-viewer" class="fullscreen-viewer">
+    <button type="button" id="btn-close-fs" class="btn-close-fs">✕ Fermer le zoom</button>
+    <div class="fs-scroll">
+      <img id="fs-img" alt="Ticket zoomé">
+    </div>
+  </dialog>
+
+  <!-- Modale des nouveautés de la version actuelle -->
+  <dialog id="modal-changelog">
+    <div class="modal-content">
+      <h3>✨ Nouveautés — Version 2.4</h3>
+      <p>Voici ce qu'apporte la version actuelle de GardeTicket :</p>
+      <ul class="roadmap-list changelog-list">
+        <li>
+          <strong>🔔 Rappels avant expiration de garantie</strong>
+          <span>Bandeau d'alerte automatique dès qu'une garantie arrive à moins de 90 jours de l'échéance, et bouton <em>Rappel agenda</em> sur chaque fiche pour créer un événement calendrier 30 jours avant la fin (100 % local, sans serveur).</span>
+        </li>
+      </ul>
+      <details class="old-versions">
+        <summary>Versions précédentes (v2.3, v2.2 et v2.1)</summary>
+        <ul class="roadmap-list">
+          <li>
+            <strong>🎨 Thèmes de couleurs personnalisables (v2.3)</strong>
+            <span>Appuie sur le bouton <em>Thème</em> dans l'en-tête pour choisir ta couleur principale parmi 8 teintes tout en conservant le mode clair ou sombre de ton téléphone.</span>
+          </li>
+          <li>
+            <strong>🔄 Mise à jour automatique intelligente (v2.2)</strong>
+            <span>Actualisation automatique du cache dès qu'une nouvelle version est publiée, avec bandeau non intrusif si une saisie est en cours.</span>
+          </li>
+          <li>
+            <strong>✨ Notes de version et feuille de route (v2.2)</strong>
+            <span>Ajout des boutons <em>Nouveautés</em> et <em>À venir</em> pour suivre les évolutions de l'application.</span>
+          </li>
+          <li>
+            <strong>🖨️ Scanner N&amp;B, PDF et restauration sans doublons (v2.1)</strong>
+            <span>Filtre noir et blanc contrasté, recadrage manuel, factures PDF, zoom plein écran et fusion intelligente JSON.</span>
+          </li>
+        </ul>
+      </details>
+      <div class="modal-buttons">
+        <button type="button" id="btn-close-changelog" class="btn-primary">Fermer</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Modale des futures fonctionnalités -->
+  <dialog id="modal-roadmap">
+    <div class="modal-content">
+      <h3>🚀 Prochaines fonctionnalités</h3>
+      <p>Voici les améliorations prévues pour les futures versions de GardeTicket :</p>
+      <ul class="roadmap-list">
+        <li>
+          <strong>🗂️ Catégories et filtres avancés</strong>
+          <span>Classer tes achats (Électroménager, Informatique, Bricolage, Auto…) pour retrouver un ticket encore plus vite.</span>
+        </li>
+        <li>
+          <strong>📑 Tickets multi-pages</strong>
+          <span>Ajouter plusieurs photos pour un même achat (ticket de caisse + certificat d'extension de garantie).</span>
+        </li>
+        <li>
+          <strong>📤 Export PDF récapitulatif</strong>
+          <span>Générer un dossier PDF prêt à envoyer au SAV avec la photo du ticket et les infos de garantie.</span>
+        </li>
+        <li>
+          <strong>📊 Statistiques des achats</strong>
+          <span>Voir le montant total des équipements suivis et la répartition par magasin ou par année.</span>
+        </li>
+      </ul>
+      <div class="modal-buttons">
+        <button type="button" id="btn-close-roadmap" class="btn-primary">Fermer</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

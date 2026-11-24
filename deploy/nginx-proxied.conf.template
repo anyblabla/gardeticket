@@ -1,0 +1,30 @@
+# GardeTicket — vhost nginx « derrière reverse proxy » (généré par deploy/install.sh)
+# HTTPS, en-têtes de sécurité et blocage des ordinateurs sont gérés par le proxy
+# (voir deploy/npm-advanced-config.conf pour Nginx Proxy Manager).
+
+server {
+    @LISTEN@
+    server_name @DOMAIN@;
+
+    root @WEBROOT@;
+    index index.html;
+
+    server_tokens off;
+
+    access_log /var/log/nginx/gardeticket.access.log;
+    error_log  /var/log/nginx/gardeticket.error.log;
+
+    gzip on;
+    gzip_vary on;
+    gzip_types text/css text/javascript application/javascript application/json image/svg+xml;
+
+    # Toujours revalider (ETag) : indispensable pour que le service worker
+    # (cache.addAll) récupère bien les nouveaux fichiers après une mise à jour.
+    add_header Cache-Control "no-cache" always;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ /\. { deny all; }
+}
