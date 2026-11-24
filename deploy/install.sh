@@ -23,6 +23,7 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 SRC_DIR="$REPO_DIR/app"
 
 SITE_NAME="gardeticket"
+ERROR_ROOT="/var/www/gardeticket-403"
 WEB_ROOT="/var/www/gardeticket"
 DOMAIN="_"
 EMAIL=""
@@ -70,7 +71,7 @@ CONF_ENAB="/etc/nginx/sites-enabled/${SITE_NAME}.conf"
 if [[ $UNINSTALL -eq 1 ]]; then
   log "Suppression du site GardeTicket"
   rm -f "$CONF_ENAB" "$CONF_AVAIL"
-  rm -rf "$WEB_ROOT"
+  rm -rf "$WEB_ROOT" "$ERROR_ROOT"
   if command -v nginx >/dev/null && nginx -t 2>/dev/null; then systemctl reload nginx; fi
   log "Terminé (nginx et les certificats Let's Encrypt éventuels sont conservés)."
   exit 0
@@ -117,6 +118,12 @@ if [[ -d "$WEB_ROOT" ]]; then
 fi
 mv "$STAGE" "$WEB_ROOT"
 
+# Page « mobile uniquement » (mode autonome ; inutile derrière NPM qui a la sienne)
+if [[ $MODE == standalone || -d "$ERROR_ROOT" ]]; then
+  install -d -m 755 -o root -g root "$ERROR_ROOT"
+  install -m 644 -o root -g root "$SCRIPT_DIR/403_gardeticket/index.html" "$ERROR_ROOT/index.html"
+fi
+
 # --- Configuration nginx -----------------------------------------------------
 if [[ $UPDATE_ONLY -eq 0 ]]; then
   # Migration : ancien vhost sans extension (sites-*/gardeticket) -> mis de côté,
@@ -141,6 +148,7 @@ if [[ $UPDATE_ONLY -eq 0 ]]; then
     sed -e "s|@LISTEN@|${LISTEN}|" \
         -e "s|@DOMAIN@|${DOMAIN}|" \
         -e "s|@WEBROOT@|${WEB_ROOT}|" \
+        -e "s|@ERRORROOT@|${ERROR_ROOT}|" \
         -e "s|@BLOCK_DEFAULT@|${BLOCK_DESKTOP}|g" \
         "$TEMPLATE" > "$CONF_AVAIL"
     chmod 644 "$CONF_AVAIL"

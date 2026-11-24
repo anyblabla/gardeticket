@@ -15,7 +15,7 @@ Application statique : HTML, CSS et JavaScript, sans dépendance ni build.
 
 ```
 app/      fichiers publiés (index.html, aide.html, app.js, theme-init.js, style.css, sw.js, manifest.json, icônes)
-deploy/   install.sh, gabarits nginx (proxied / standalone) et config NPM de référence
+deploy/   install.sh, gabarits nginx (proxied / standalone), config NPM de référence, page 403 « mobile uniquement »
 ```
 
 ## Deux façons de l'héberger
@@ -34,7 +34,7 @@ Le serveur sert l'appli en HTTP sur le port 80 avec un vhost minimal. Dans NPM :
 - **Détails** : `http`, IP du serveur, port `80` ;
 - **SSL** : certificat, Forcer SSL, HTTP/2, HSTS ;
 - **Configuration Nginx personnalisée** : colle le contenu de [`deploy/npm-advanced-config.conf`](deploy/npm-advanced-config.conf)
-  (en-têtes de sécurité, CSP, blocage des ordinateurs de bureau). Crée aussi la page `/data/403_mobile_only/index.html` dans le conteneur NPM.
+  (en-têtes de sécurité, CSP, blocage des ordinateurs de bureau). Copie aussi la page [`deploy/403_gardeticket/index.html`](deploy/403_gardeticket/index.html) dans le dossier `data/403_gardeticket/` de NPM (visible dans le conteneur sous `/data/403_gardeticket/`) : c'est ce que verront les visiteurs sur ordinateur.
 
 ### 2. Serveur autonome avec HTTPS (Let's Encrypt)
 

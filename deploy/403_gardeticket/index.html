@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#1C7176">
+  <title>GardeTicket — à ouvrir sur ton téléphone</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🧾%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --primary: #1C7176;
+      --accent: #EA5D01;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #cbd5e1;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0F172A;
+        --card: #1e293b;
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --border: #334155;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    main {
+      width: 100%;
+      max-width: 34rem;
+      background: var(--card);
+      border-top: 6px solid var(--primary);
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    .icon { font-size: 3rem; line-height: 1; margin-bottom: 0.5rem; }
+    h1 { margin: 0 0 0.75rem; font-size: 1.5rem; color: var(--primary); }
+    p { margin: 0 0 1rem; }
+    .why { color: var(--muted); font-size: 0.95rem; }
+    ol {
+      text-align: left;
+      margin: 1.25rem auto;
+      padding: 1rem 1rem 1rem 2.4rem;
+      max-width: 26rem;
+      background: var(--bg);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+    }
+    li { margin-bottom: 0.4rem; }
+    li:last-child { margin-bottom: 0; }
+    .tip { font-size: 0.95rem; }
+    footer {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="icon">📱</div>
+    <h1>GardeTicket se consulte sur ton téléphone</h1>
+    <p>Cette application est faite pour les <strong>smartphones et tablettes</strong>. Elle n'est pas disponible depuis un ordinateur.</p>
+    <p class="why">Tes tickets et tes garanties restent enregistrés dans la mémoire de ton téléphone, à un seul endroit, pour protéger ta vie privée.</p>
+
+    <ol>
+      <li>Prends ton smartphone ou ta tablette.</li>
+      <li>Ouvre cette même adresse dans son navigateur.</li>
+      <li>Ajoute l'appli à ton écran d'accueil pour la retrouver comme une vraie application.</li>
+    </ol>
+
+    <p class="tip">💡 <strong>Astuce :</strong> envoie-toi le lien par mail ou par messagerie, puis ouvre-le depuis ton téléphone.</p>
+
+    <footer>
+      Proposé par <strong>Amaury aka BlablaLinux</strong> •
+      <a href="https://blablalinux.be/mes-services-publics/">Mes services publics</a>
+    </footer>
+  </main>
+</body>
+</html>

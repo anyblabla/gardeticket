@@ -31,10 +31,16 @@ server {
     add_header Permissions-Policy "camera=(self), microphone=(), geolocation=(), payment=()" always;
     add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; frame-src 'self' data: blob:; object-src 'self' data: blob:; manifest-src 'self'; worker-src 'self';" always;
 
+    # Page affichée aux ordinateurs de bureau (voir deploy/403_gardeticket/)
+    error_page 403 @mobile_only;
+    location @mobile_only {
+        root @ERRORROOT@;
+        rewrite ^ /index.html break;
+    }
+
     location / {
         if ($gardeticket_block) {
-            default_type text/html;
-            return 403 '<!doctype html><html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GardeTicket</title><body style="font-family:system-ui;max-width:32rem;margin:3rem auto;padding:0 1rem"><h1>GardeTicket</h1><p>Cette application est conçue pour smartphones et tablettes. Ouvre cette adresse depuis ton téléphone.</p></body></html>';
+            return 403;
         }
         try_files $uri $uri/ =404;
     }
