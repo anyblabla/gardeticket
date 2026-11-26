@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gardeticket-v25';
+const CACHE_NAME = 'gardeticket-v27';
 const ASSETS = [
   '/',
   '/index.html',
@@ -8,6 +8,7 @@ const ASSETS = [
   '/style.css?v=2.6',
   '/app.js',
   '/app.js?v=2.6',
+  '/icon.svg',
   '/icon-192.png',
   '/icon-512.png'
 ];
