@@ -22,9 +22,20 @@ deploy/   install.sh, gabarits nginx (proxied / standalone), config NPM de réf�
 
 ### 1. Derrière un reverse proxy (Nginx Proxy Manager) — mode par défaut
 
+Depuis GitHub :
+
 ```bash
 sudo apt-get install -y git
-git clone [https://github.com/anyblabla/gardeticket.git](https://github.com/anyblabla/gardeticket.git)
+git clone https://github.com/anyblabla/gardeticket.git
+cd gardeticket
+sudo bash deploy/install.sh
+```
+
+Ou depuis le miroir Gitea :
+
+```bash
+sudo apt-get install -y git
+git clone https://gitea.blablalinux.be/blablalinux/gardeticket.git
 cd gardeticket
 sudo bash deploy/install.sh
 ```
