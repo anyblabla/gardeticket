@@ -5,7 +5,7 @@ Tout est stocké **uniquement dans le navigateur du téléphone** : aucune donn�
 
 - 📷 Photo du ticket (recadrage automatique, filtre scanner N&B) ou facture PDF
 - 🔔 Alerte avant expiration de la garantie et rappel agenda (`.ics`)
-- 💾 Sauvegarde / restauration en JSON
+- 💾 Sauvegarde locale (`.json`), envoi vers le cloud (`.txt`) et restauration (`.json` / `.txt`)
 - 🎨 8 thèmes de couleurs, mode clair/sombre automatique
 - 📴 Fonctionne hors connexion (service worker)
 
@@ -24,7 +24,7 @@ deploy/   install.sh, gabarits nginx (proxied / standalone), config NPM de réf�
 
 ```bash
 sudo apt-get install -y git
-git clone https://github.com/anyblabla/gardeticket.git
+git clone [https://github.com/anyblabla/gardeticket.git](https://github.com/anyblabla/gardeticket.git)
 cd gardeticket
 sudo bash deploy/install.sh
 ```
@@ -35,6 +35,7 @@ Le serveur sert l'appli en HTTP sur le port 80 avec un vhost minimal. Dans NPM :
 - **SSL** : certificat, Forcer SSL, HTTP/2, HSTS ;
 - **Configuration Nginx personnalisée** : colle le contenu de [`deploy/npm-advanced-config.conf`](deploy/npm-advanced-config.conf)
   (en-têtes de sécurité, CSP, blocage des ordinateurs de bureau). Copie aussi la page [`deploy/403_gardeticket/index.html`](deploy/403_gardeticket/index.html) dans le dossier `data/403_gardeticket/` de NPM (visible dans le conteneur sous `/data/403_gardeticket/`) : c'est ce que verront les visiteurs sur ordinateur.
+- **Emplacements personnalisés** : ajoute `/sw.js` (vers `http://<IP_SERVEUR>:80`) avec `Cache-Control "no-cache, no-store, must-revalidate"` et `X-Content-Type-Options "nosniff"` pour éviter qu'un vieux service worker reste en cache.
 
 ### 2. Serveur autonome avec HTTPS (Let's Encrypt)
 
@@ -75,7 +76,7 @@ sudo bash deploy/install.sh --update
 ```
 
 > ⚠️ Le service worker fonctionne en « cache d'abord ». À chaque modification des fichiers de `app/`,
-> incrémente `CACHE_NAME` dans `app/sw.js` (ex. `gardeticket-v19`), sinon les téléphones garderont l'ancienne version.
+> incrémente `CACHE_NAME` dans `app/sw.js` (ex. `gardeticket-v25`), sinon les téléphones garderont l'ancienne version.
 
 ## Points importants
 
