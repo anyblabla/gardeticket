@@ -1,4 +1,4 @@
-const APP_VERSION = '2.4';
+const APP_VERSION = '2.6';
 const THEME_COLORS = {
   teal: '#1C7176',
   ocean: '#1D4ED8',
@@ -520,6 +520,15 @@ function dataURLtoFile(dataUrl, filename) {
   return new File([u8arr], filename, { type: mime });
 }
 
+function getAllTicketsAsync() {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE_NAME, 'readonly');
+    const req = tx.objectStore(STORE_NAME).getAll();
+    req.onsuccess = (e) => resolve(e.target.result || []);
+    req.onerror = (e) => reject(e);
+  });
+}
+
 // Empreinte unique d'un ticket pour détecter les doublons même si l'ID a changé
 function getTicketSignature(t) {
   return `${(t.name || '').trim().toLowerCase()}|${t.purchaseDate || ''}|${(t.store || '').trim().toLowerCase()}|${t.price || ''}`;
@@ -622,7 +631,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
 
-    navigator.serviceWorker.register('sw.js').then((reg) => {
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then((reg) => {
       reg.update();
     }).catch(() => {});
   }
@@ -751,7 +760,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   fsImg.onclick = () => fsImg.classList.toggle('zoomed');
   document.getElementById('btn-close-fs').onclick = () => fsViewer.close();
 
-  // Partage natif
+  // Partage natif d'un ticket
   document.getElementById('btn-share').onclick = async () => {
     if (!currentTicket) return;
     const isPdf = currentTicket.mediaType === 'pdf' || currentTicket.image.startsWith('data:application/pdf');
@@ -851,18 +860,51 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  document.getElementById('btn-export').onclick = () => {
-    const tx = db.transaction(STORE_NAME, 'readonly');
-    tx.objectStore(STORE_NAME).getAll().onsuccess = (e) => {
-      const blob = new Blob([JSON.stringify(e.target.result)], { type: 'application/json' });
+  // 1. Sauvegarde locale directe dans le téléphone (.json)
+  document.getElementById('btn-export').onclick = async () => {
+    try {
+      const tickets = await getAllTicketsAsync();
+      const blob = new Blob([JSON.stringify(tickets)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `gardeticket-sauvegarde-${new Date().toISOString().slice(0,10)}.json`;
+      a.href = url;
+      a.download = `gardeticket-sauvegarde-${new Date().toISOString().slice(0, 10)}.json`;
       a.click();
-    };
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    } catch (err) {
+      alert('Erreur lors de la création de la sauvegarde.');
+    }
   };
 
-  // Import JSON sans doublons
+  // 2. Sauvegarde vers le cloud via le menu de partage système (.txt)
+  document.getElementById('btn-export-cloud').onclick = async () => {
+    try {
+      const tickets = await getAllTicketsAsync();
+      const jsonContent = JSON.stringify(tickets);
+      const dateStr = new Date().toISOString().slice(0, 10);
+      const shareFile = new File([jsonContent], `gardeticket-sauvegarde-${dateStr}.txt`, { type: 'text/plain' });
+
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [shareFile] })) {
+        try {
+          await navigator.share({
+            title: 'Sauvegarde GardeTicket',
+            text: 'Sauvegarde de mes tickets et garanties GardeTicket',
+            files: [shareFile]
+          });
+        } catch (err) {
+          if (err && err.name !== 'AbortError') {
+            alert('Impossible d’ouvrir le menu de partage.');
+          }
+        }
+      } else {
+        alert('Le partage vers le cloud n’est pas pris en charge par ce navigateur. Utilise le bouton « Sauvegarder » pour enregistrer le fichier sur ton téléphone.');
+      }
+    } catch (err) {
+      alert('Erreur lors de la préparation de la sauvegarde.');
+    }
+  };
+
+  // Import JSON / TXT sans doublons
   const importModal = document.getElementById('modal-import');
   document.getElementById('input-import').onchange = (e) => {
     const file = e.target.files[0];

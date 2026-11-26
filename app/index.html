@@ -8,7 +8,7 @@
   <script src="theme-init.js"></script>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2.6">
 </head>
 <body>
   <header>
@@ -42,10 +42,11 @@
     <section class="actions-bar">
       <button id="btn-toggle-form" class="btn-primary">+ Ajouter un ticket</button>
       <div class="backup-actions">
-        <button id="btn-export" class="btn-secondary" title="Sauvegarder dans un fichier">💾 Sauvegarder</button>
+        <button id="btn-export" class="btn-secondary" title="Télécharger la sauvegarde sur ton téléphone"><span class="btn-icon">💾</span><span class="btn-label">Sauvegarder</span></button>
+        <button id="btn-export-cloud" class="btn-secondary" title="Envoyer la sauvegarde vers ton cloud"><span class="btn-icon">☁️</span><span class="btn-label">Vers le cloud</span></button>
         <label class="btn-secondary" title="Restaurer depuis un fichier">
-          📂 Restaurer
-          <input type="file" id="input-import" accept=".json" hidden>
+          <span class="btn-icon">📂</span><span class="btn-label">Restaurer</span>
+          <input type="file" id="input-import" accept=".json,.txt,application/json,text/plain" hidden>
         </label>
       </div>
     </section>
@@ -166,7 +167,7 @@
   <footer>
     <p>🔒 <strong>100 % privé :</strong> tes tickets ne quittent jamais ton téléphone et ne sont envoyés sur aucun serveur.</p>
     <p>💡 Pense à cliquer sur <strong>Sauvegarder</strong> de temps en temps : vider les données de ton navigateur efface tes tickets.</p>
-    <p class="author">Proposé par <strong>Amaury aka BlablaLinux</strong> • <a href="https://blablalinux.be/mes-services-publics/" target="_blank" rel="noopener">Mes services publics</a> • <button type="button" id="btn-version-footer" class="btn-link-version">v2.4</button></p>
+    <p class="author">Proposé par <strong>Amaury aka BlablaLinux</strong> • <a href="https://blablalinux.be/mes-services-publics/" target="_blank" rel="noopener">Mes services publics</a> • <button type="button" id="btn-version-footer" class="btn-link-version">v2.6</button></p>
   </footer>
 
   <!-- Modale pour afficher le ticket ou PDF en grand -->
@@ -217,17 +218,21 @@
   <!-- Modale des nouveautés de la version actuelle -->
   <dialog id="modal-changelog">
     <div class="modal-content">
-      <h3>✨ Nouveautés — Version 2.4</h3>
+      <h3>✨ Nouveautés — Version 2.6</h3>
       <p>Voici ce qu'apporte la version actuelle de GardeTicket :</p>
       <ul class="roadmap-list changelog-list">
         <li>
-          <strong>🔔 Rappels avant expiration de garantie</strong>
-          <span>Bandeau d'alerte automatique dès qu'une garantie arrive à moins de 90 jours de l'échéance, et bouton <em>Rappel agenda</em> sur chaque fiche pour créer un événement calendrier 30 jours avant la fin (100 % local, sans serveur).</span>
+          <strong>☁️ Nouveau bouton « Vers le cloud »</strong>
+          <span>En plus du bouton <em>Sauvegarder</em> (téléchargement direct en <code>.json</code> sur ton téléphone), le bouton <em>Vers le cloud</em> ouvre le menu de partage de ton téléphone pour déposer ta sauvegarde où tu le souhaites (Nextcloud, Drive, Proton…), avec restauration compatible <code>.json</code> et <code>.txt</code>.</span>
         </li>
       </ul>
       <details class="old-versions">
-        <summary>Versions précédentes (v2.3, v2.2 et v2.1)</summary>
+        <summary>Versions précédentes (v2.4, v2.3, v2.2 et v2.1)</summary>
         <ul class="roadmap-list">
+          <li>
+            <strong>🔔 Rappels avant expiration de garantie (v2.4)</strong>
+            <span>Bandeau d'alerte automatique dès qu'une garantie arrive à moins de 90 jours de l'échéance, et bouton <em>Rappel agenda</em> sur chaque fiche pour créer un événement calendrier 30 jours avant la fin (100 % local, sans serveur).</span>
+          </li>
           <li>
             <strong>🎨 Thèmes de couleurs personnalisables (v2.3)</strong>
             <span>Appuie sur le bouton <em>Thème</em> dans l'en-tête pour choisir ta couleur principale parmi 8 teintes tout en conservant le mode clair ou sombre de ton téléphone.</span>
@@ -281,6 +286,6 @@
     </div>
   </dialog>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2.6"></script>
 </body>
 </html>

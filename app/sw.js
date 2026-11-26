@@ -1,5 +1,16 @@
-const CACHE_NAME = 'gardeticket-v18';
-const ASSETS = ['/', '/index.html', '/aide.html', '/style.css', '/app.js', '/theme-init.js', '/icon-192.png', '/icon-512.png'];
+const CACHE_NAME = 'gardeticket-v25';
+const ASSETS = [
+  '/',
+  '/index.html',
+  '/aide.html',
+  '/theme-init.js',
+  '/style.css',
+  '/style.css?v=2.6',
+  '/app.js',
+  '/app.js?v=2.6',
+  '/icon-192.png',
+  '/icon-512.png'
+];
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
