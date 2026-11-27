@@ -13,14 +13,36 @@ Application statique : HTML, CSS et JavaScript, sans dépendance ni build.
 
 ## Structure du dépôt
 
-```
-app/      fichiers publiés (index.html, aide.html, app.js, theme-init.js, style.css, sw.js, manifest.json, icônes)
-deploy/   install.sh, gabarits nginx (proxied / standalone), config NPM de référence, page 403 « mobile uniquement »
+```text
+app/                fichiers publiés (index.html, aide.html, app.js, theme-init.js, style.css, sw.js, manifest.json, icônes)
+deploy/             install.sh, gabarits nginx (proxied / standalone / docker), config NPM, page 403 « mobile uniquement »
+Dockerfile          image Docker basée sur nginx:alpine
+docker-compose.yml  déploiement prêt à l'emploi via ghcr.io
 ```
 
-## Deux façons de l'héberger
+## Trois façons de l'héberger
 
-### 1. Derrière un reverse proxy (Nginx Proxy Manager) — mode par défaut
+### 1. Avec Docker / Docker Compose (recommandé pour auto-hébergeurs)
+
+L'image multi-architecture (`linux/amd64` et `linux/arm64`) est publiée automatiquement sur GitHub Container Registry (`ghcr.io/anyblabla/gardeticket:latest`).
+
+```bash
+mkdir -p gardeticket && cd gardeticket
+cat << 'YAML' > docker-compose.yml
+services:
+  gardeticket:
+    image: ghcr.io/anyblabla/gardeticket:latest
+    container_name: gardeticket
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+YAML
+docker compose up -d
+```
+
+> ℹ️ Même hébergée via Docker, l'application reste **100 % côté client** : aucun volume n'est nécessaire, les tickets restent stockés dans le navigateur de chaque téléphone. Place le conteneur derrière un reverse proxy en **HTTPS** (voir les réglages NPM ci-dessous) pour activer la PWA et l'appareil photo.
+
+### 2. Derrière un reverse proxy (Nginx Proxy Manager) — script Debian
 
 Depuis GitHub :
 
@@ -42,13 +64,13 @@ sudo bash deploy/install.sh
 
 Le serveur sert l'appli en HTTP sur le port 80 avec un vhost minimal. Dans NPM :
 
-- **Détails** : `http`, IP du serveur, port `80` ;
+- **Détails** : `http`, IP du serveur, port `80` (ou `8080` avec Docker) ;
 - **SSL** : certificat, Forcer SSL, HTTP/2, HSTS ;
 - **Configuration Nginx personnalisée** : colle le contenu de [`deploy/npm-advanced-config.conf`](deploy/npm-advanced-config.conf)
   (en-têtes de sécurité, CSP, blocage des ordinateurs de bureau). Copie aussi la page [`deploy/403_gardeticket/index.html`](deploy/403_gardeticket/index.html) dans le dossier `data/403_gardeticket/` de NPM (visible dans le conteneur sous `/data/403_gardeticket/`) : c'est ce que verront les visiteurs sur ordinateur.
 - **Emplacements personnalisés** : ajoute `/sw.js` (vers `http://<IP_SERVEUR>:80`) avec `Cache-Control "no-cache, no-store, must-revalidate"` et `X-Content-Type-Options "nosniff"` pour éviter qu'un vieux service worker reste en cache.
 
-### 2. Serveur autonome avec HTTPS (Let's Encrypt)
+### 3. Serveur autonome avec HTTPS (Let's Encrypt)
 
 ```bash
 sudo bash deploy/install.sh --standalone --domain tickets.exemple.be --email toi@exemple.be
@@ -56,7 +78,7 @@ sudo bash deploy/install.sh --standalone --domain tickets.exemple.be --email toi
 
 Le vhost nginx porte alors lui-même les en-têtes de sécurité, la CSP et le blocage des ordinateurs.
 
-### Ce que fait le script
+### Ce que fait le script `deploy/install.sh`
 
 1. installe `nginx` (et `certbot` si `--email`) ;
 2. copie `app/` dans `/var/www/gardeticket` (propriétaire `root`, dossiers `755`, fichiers `644`) ;
@@ -65,7 +87,7 @@ Le vhost nginx porte alors lui-même les en-têtes de sécurité, la CSP et le b
 
 Il est relançable : un vhost existant n'est pas écrasé (sauf `--force-nginx`). L'ancien contenu du site est conservé dans `/var/backups/gardeticket/previous`, et un ancien vhost nommé `gardeticket` (sans `.conf`) y est mis de côté.
 
-### Options
+### Options du script
 
 | Option | Effet |
 |---|---|
@@ -80,6 +102,16 @@ Il est relançable : un vhost existant n'est pas écrasé (sauf `--force-nginx`)
 
 ## Mise à jour
 
+**Avec Docker Compose :**
+
+```bash
+docker compose pull && docker compose up -d
+```
+
+*(Compatible également avec Watchtower pour les mises à jour automatiques.)*
+
+**Avec le script d'installation :**
+
 ```bash
 cd gardeticket
 git pull
@@ -87,7 +119,7 @@ sudo bash deploy/install.sh --update
 ```
 
 > ⚠️ Le service worker fonctionne en « cache d'abord ». À chaque modification des fichiers de `app/`,
-> incrémente `CACHE_NAME` dans `app/sw.js` (ex. `gardeticket-v25`), sinon les téléphones garderont l'ancienne version.
+> incrémente `CACHE_NAME` dans `app/sw.js` (ex. `gardeticket-v26`), sinon les téléphones garderont l'ancienne version.
 
 ## Points importants
 
@@ -104,4 +136,4 @@ Tu peux l'utiliser, l'étudier, le modifier et le partager ; si tu publies une v
 
 ---
 
-Auteur : ce guide est proposé par Amaury alias BlablaLinux. Retrouvez tous mes services sur [blablalinux.be/mes-services-publics](https://blablalinux.be/mes-services-publics/).
+> **Author**: this guide is proposed by **Amaury aka BlablaLinux**. Find all my services on [blablalinux.be/mes-services-publics/](https://blablalinux.be/mes-services-publics/).
