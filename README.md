@@ -11,6 +11,10 @@ Tout est stocké **uniquement dans le navigateur du téléphone** : aucune donn�
 
 Application statique : HTML, CSS et JavaScript, sans dépendance ni build.
 
+<p align="center">
+  <img src="docs/apercu.png" alt="Aperçu de l'interface mobile GardeTicket" width="320">
+</p>
+
 ## Structure du dépôt
 
 ```text
