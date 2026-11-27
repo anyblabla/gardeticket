@@ -1,0 +1,7 @@
+services:
+  gardeticket:
+    image: ghcr.io/anyblabla/gardeticket:latest
+    container_name: gardeticket
+    restart: unless-stopped
+    ports:
+      - "8080:80"
