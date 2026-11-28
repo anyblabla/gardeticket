@@ -28,7 +28,7 @@ docker-compose.yml  déploiement prêt à l'emploi via ghcr.io
 
 ### 1. Avec Docker / Docker Compose (recommandé pour auto-hébergeurs)
 
-L'image multi-architecture (`linux/amd64` et `linux/arm64`) est publiée automatiquement sur GitHub Container Registry (`ghcr.io/anyblabla/gardeticket:latest`).
+L'image multi-architecture (`linux/amd64` et `linux/arm64`) est publiée automatiquement sur GitHub Container Registry (`ghcr.io/anyblabla/gardeticket:latest` ou `gitea.blablalinux.be/blablalinux/gardeticket:latest`).
 
 ```bash
 mkdir -p gardeticket && cd gardeticket

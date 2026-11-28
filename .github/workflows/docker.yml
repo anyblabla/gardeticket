@@ -29,10 +29,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Construire et publier l'image
+      - name: Connexion au registre Gitea
+        uses: docker/login-action@v3
+        with:
+          registry: gitea.blablalinux.be
+          username: blablalinux
+          password: ${{ secrets.GITEA_TOKEN }}
+
+      - name: Construire et publier l'image (GitHub + Gitea)
         uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/anyblabla/gardeticket:latest
+          tags: |
+            ghcr.io/anyblabla/gardeticket:latest
+            gitea.blablalinux.be/blablalinux/gardeticket:latest
